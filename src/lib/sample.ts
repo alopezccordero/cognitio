@@ -1,11 +1,11 @@
-// Sample room content for the GUI candidates. Authors, venues and titles are
-// invented placeholders — real records will come from OpenAlex / Semantic Scholar.
+// Placeholder content for the GUI. Authors, venues and titles are invented —
+// real records will come from the Semantic Scholar Academic Graph API.
 
 export type Member = {
   id: string
   name: string
   initials: string
-  color: string // presence color, used by every candidate
+  color: string // presence color
   sprite: string // which mascot pose represents them
   status: 'reading' | 'annotating' | 'voting' | 'idle'
   where?: string
@@ -21,6 +21,9 @@ export type Paper = {
   summary: string
   cluster: 'data' | 'models' | 'eval' | 'speech'
   annotations: { by: string; text: string }[]
+  fields: string[]
+  openAccess: boolean
+  limitations: string[] // gaps the paper reports in its own words
 }
 
 export type Gap = {
@@ -33,12 +36,44 @@ export type Gap = {
 }
 
 export const room = {
+  id: 'cs-asr',
   name: 'Code-switched speech recognition',
   area: 'Automatic speech recognition for Spanish–English code-switching',
+  keywords: ['code-switching', 'bilingual ASR', 'Spanish–English', 'speech recognition'],
+  years: [2018, 2026] as [number, number],
+  fields: ['Computer Science', 'Linguistics'],
   created: 'Nov 12',
   owner: 'ana',
-  searched: { source: 'OpenAlex', hits: 214, kept: 18 },
+  invite: 'NIB-4K7Q',
+  searched: { source: 'Semantic Scholar', hits: 214, kept: 18 },
 }
+
+export const me = { id: 'you', name: 'Alex López', email: 'you@lab.edu', sprite: 'nib-r1c0', mascot: 'nib' as 'nib' | 'tuft' }
+
+export type RoomSummary = { id: string; name: string; area: string; papers: number; gaps: number; members: string[]; updated: string; sprite: string; role: 'owner' | 'member' }
+
+export const rooms: RoomSummary[] = [
+  { id: 'cs-asr', name: 'Code-switched speech recognition', area: 'ASR for Spanish–English code-switching', papers: 18, gaps: 4, members: ['ana', 'marcus', 'priya', 'diego', 'you'], updated: '2 min ago', sprite: 'nib-r2c3', role: 'member' },
+  { id: 'lowres-mt', name: 'Low-resource translation', area: 'Machine translation for Indigenous languages of Mexico', papers: 26, gaps: 7, members: ['you', 'priya'], updated: 'Yesterday', sprite: 'tuft-r2c4', role: 'owner' },
+  { id: 'eval-llm', name: 'LLM evaluation reliability', area: 'Contamination and reproducibility of LLM benchmarks', papers: 41, gaps: 9, members: ['you', 'marcus', 'diego'], updated: 'Nov 14', sprite: 'nib-r2c4', role: 'member' },
+]
+
+export const invites = [{ room: 'Speech prosody reading group', from: 'Priya Shah', sprite: 'tuft-r2c2' }]
+
+export const activity = [
+  { who: 'ana', what: 'annotated', target: 'Evaluating ASR beyond WER', when: '2 min' },
+  { who: 'priya', what: 'voted on', target: 'Small on-device models break at switch points', when: '6 min' },
+  { who: 'ai', what: 'found 2 new reported gaps in', target: 'A survey of code-switching corpora', when: '1 h' },
+  { who: 'marcus', what: 'pinned', target: 'Prosody at the switch', when: '3 h' },
+  { who: 'diego', what: 'joined the room', target: '', when: 'Nov 13' },
+]
+
+export const searchPreview = [
+  { title: 'Switch-point modeling for bilingual end-to-end ASR', year: 2024, citations: 87 },
+  { title: 'A survey of code-switching corpora for speech', year: 2023, citations: 212 },
+  { title: 'Synthetic code-switched text for language model fusion', year: 2023, citations: 96 },
+  { title: 'Prosody at the switch: pitch and timing in bilingual speech', year: 2022, citations: 58 },
+]
 
 export const members: Member[] = [
   { id: 'ana', name: 'Ana Ríos', initials: 'AR', color: '#74DDEA', sprite: 'nib-r2c2', status: 'annotating', where: 'p3' },
@@ -63,6 +98,9 @@ export const papers: Paper[] = [
       { by: 'marcus', text: 'Boundary token idea is cheap to try on our data.' },
       { by: 'ana', text: 'They only test intra-sentential switches — see section 5.' },
     ],
+    fields: ['Computer Science'],
+    openAccess: true,
+    limitations: ['Only intra-sentential switches were evaluated.', 'Results are reported on a single corpus (Miami Bangor).'],
   },
   {
     id: 'p2',
@@ -75,6 +113,9 @@ export const papers: Paper[] = [
     summary:
       'Catalogs 31 code-switched speech corpora. Spanish–English sets come almost entirely from Miami and Puerto Rico; the authors call out border-region speech as missing.',
     annotations: [{ by: 'priya', text: 'Table 2 is the best map of what exists.' }],
+    fields: ['Linguistics', 'Computer Science'],
+    openAccess: true,
+    limitations: ['Border-region Spanish–English speech is not represented in any corpus.', 'Most corpora lack speaker age metadata.'],
   },
   {
     id: 'p3',
@@ -91,6 +132,9 @@ export const papers: Paper[] = [
       { by: 'diego', text: 'Their code is on GitHub, MIT license.' },
       { by: 'ana', text: 'No children or elderly speakers in any test set.' },
     ],
+    fields: ['Computer Science'],
+    openAccess: false,
+    limitations: ['No test set includes children or speakers over 60.'],
   },
   {
     id: 'p4',
@@ -103,6 +147,9 @@ export const papers: Paper[] = [
     summary:
       'Distills a 600M-parameter model to 95M for phones. Accuracy holds on monolingual speech but drops sharply once utterances switch language.',
     annotations: [],
+    fields: ['Computer Science', 'Engineering'],
+    openAccess: false,
+    limitations: ['Switch-aware training was not attempted for the distilled model.'],
   },
   {
     id: 'p5',
@@ -115,6 +162,9 @@ export const papers: Paper[] = [
     summary:
       'Finds speakers often pause or reset pitch right before switching. A linguistics study — no recognition system uses these cues yet.',
     annotations: [{ by: 'marcus', text: 'Could be a cheap feature for the boundary token.' }],
+    fields: ['Linguistics'],
+    openAccess: true,
+    limitations: ['Findings were not tested in any recognition system.'],
   },
   {
     id: 'p6',
@@ -127,6 +177,9 @@ export const papers: Paper[] = [
     summary:
       'Generates mixed-language text with translation and alignment rules, then fuses an LM trained on it. Helps when real transcripts are scarce.',
     annotations: [],
+    fields: ['Computer Science'],
+    openAccess: true,
+    limitations: ['Synthetic text was not validated by bilingual speakers.'],
   },
 ]
 
@@ -172,7 +225,7 @@ export const chat = [
   { from: 'you', text: 'Find the main papers on code-switched ASR for Spanish and English.' },
   {
     from: 'ai',
-    tool: 'search_openalex("code-switching speech recognition Spanish English", since 2020)',
+    tool: 'search_semantic_scholar("code-switching speech recognition Spanish English", since 2020)',
     text: 'I found 214 papers and kept the 18 most cited and most on-topic. Six are pinned to the room so far. They fall into four groups: data, models, evaluation and speech science.',
   },
   { from: 'priya', text: 'Which gaps do the papers state outright?' },

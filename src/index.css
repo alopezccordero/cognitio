@@ -1,103 +1,45 @@
 @import 'tailwindcss';
 @import 'lenis/dist/lenis.css';
 
+/* Dissolve — the pasture night, turning into a map.
+   Night ground, wool text, Nib cyan for action, contour teal for structure,
+   and yellow only for gaps. */
 @theme {
-  /* A · Pasture — night field that matches the sprite sheets' own background */
-  --color-pa-night: #10131f;
-  --color-pa-dusk: #1a2033;
-  --color-pa-moss: #24433a;
-  --color-pa-wool: #f3ecdd;
-  --color-pa-nib: #74ddea;
-  --color-pa-bulb: #f6c445;
-  --color-pa-cheek: #ee8fa8;
-  --font-pixel: 'Pixelify Sans', ui-monospace, monospace;
-  --font-hyper: 'Atkinson Hyperlegible Next', system-ui, sans-serif;
-
-  /* B · Survey — vellum survey sheet, contour ink, highlighter for uncharted ground */
-  --color-sv-vellum: #e7f0f1;
-  --color-sv-sheet: #f5f9f9;
-  --color-sv-ink: #14283c;
-  --color-sv-contour: #2f8f9d;
-  --color-sv-faint: #b9d3d6;
-  --color-sv-mark: #f2da4b;
-  --font-brico: 'Bricolage Grotesque', system-ui, sans-serif;
-  --font-news: 'Newsreader', Georgia, serif;
-
-  /* D · Fog of War — morning overworld, fog where nobody has been */
-  --color-fw-water: #9fd3df;
-  --color-fw-grass: #7cc47e;
-  --color-fw-grass2: #63ad66;
-  --color-fw-path: #e8d49a;
-  --color-fw-ink: #1f2440;
-  --color-fw-fog: #3a4170;
-  --color-fw-flag: #f2605c;
-
-  /* E · Dissolve — the pasture night, turning into a map */
   --color-ds-night: #0e121d;
   --color-ds-panel: #161c2b;
+  --color-ds-raise: #1e2638;
+  --color-ds-line: #2a3347;
   --color-ds-wool: #f1ebdf;
   --color-ds-nib: #74ddea;
   --color-ds-contour: #3fa7b4;
+  --color-ds-deep: #2a4a55;
   --color-ds-mark: #f2da4b;
-
-  /* F · Floating Island — an afternoon diorama with real holes in it */
-  --color-fi-sky: #c9d3f5;
-  --color-fi-sky2: #e4e9fb;
-  --color-fi-grass: #6fbf73;
-  --color-fi-soil: #8a5a44;
-  --color-fi-void: #1a1d33;
-  --color-fi-ink: #1c2140;
-  --color-fi-lamp: #f6c445;
-
-  /* G · Field Notebook — graph paper, pen, highlighter, stickers */
-  --color-nb-paper: #eef3f8;
-  --color-nb-page: #f8fafc;
-  --color-nb-grid: #c7d7ea;
-  --color-nb-ink: #1b2a4a;
-  --color-nb-pen: #2f5bea;
-  --color-nb-hi: #d7f542;
-  --color-nb-red: #e5484d;
-  --font-schib: 'Schibsted Grotesk', system-ui, sans-serif;
-  --font-hand: 'Caveat', cursive;
-
-  /* H · Night Arcade — phosphor and a purple cabinet */
-  --color-ar-cab: #171033;
-  --color-ar-cab2: #221a47;
-  --color-ar-screen: #07141f;
-  --color-ar-cyan: #74ddea;
-  --color-ar-amber: #ffb547;
-  --color-ar-pink: #ff6fae;
-  --font-vt: 'VT323', ui-monospace, monospace;
-
-  /* I · Nautical Chart — soundings in magenta */
-  --color-nc-deep: #fbfdfd;
-  --color-nc-shoal: #c4e2ee;
-  --color-nc-shoal2: #9fcfe2;
-  --color-nc-land: #e9dcae;
-  --color-nc-ink: #17324d;
-  --color-nc-magenta: #b0307a;
-  --font-barlow: 'Barlow Condensed', system-ui, sans-serif;
-  --font-spectral: 'Spectral', Georgia, serif;
-
-  /* J · Riso Print — two drums, misregistered */
-  --color-rs-paper: #f3f4f1;
-  --color-rs-pink: #ff48b0;
-  --color-rs-teal: #00838a;
-  --color-rs-yellow: #ffe800;
-  --color-rs-ink: #1d1d2b;
-  --font-archivo: 'Archivo', system-ui, sans-serif;
+  --color-ds-alert: #ff8a7a;
+  --font-brico: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-hyper: 'Atkinson Hyperlegible Next', system-ui, sans-serif;
 }
 
 html,
 body {
   margin: 0;
-  background: #10131f;
+  background: #0e121d;
+  color: #f1ebdf;
+  color-scheme: dark;
   -webkit-font-smoothing: antialiased;
 }
 
+body {
+  font-family: var(--font-hyper);
+}
+
 :focus-visible {
-  outline: 2px solid currentColor;
+  outline: 2px solid var(--color-ds-nib);
   outline-offset: 3px;
+}
+
+::selection {
+  background: var(--color-ds-nib);
+  color: var(--color-ds-night);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -109,40 +51,47 @@ body {
   }
 }
 
-/* Pasture: chunky pixel shadow used for buttons and panels */
-.px-shadow {
-  box-shadow: 4px 4px 0 0 #05070d;
-}
-.px-press:active {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0 0 #05070d;
+/* Unmapped ground: yellow hatching used wherever a gap is shown */
+.ds-hatch {
+  background-image: repeating-linear-gradient(-45deg, rgb(242 218 75 / 0.22) 0 1px, transparent 1px 7px);
 }
 
-/* Survey: hatching for uncharted ground */
-.hatch {
-  background-image: repeating-linear-gradient(-45deg, rgb(20 40 60 / 0.22) 0 1px, transparent 1px 7px);
+/* Faint voxel grid behind auth and empty screens */
+.ds-grid {
+  background-image:
+    linear-gradient(rgb(241 235 223 / 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(241 235 223 / 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
-/* Survey · night mode: same sheet, read by lamplight */
-.sv-night {
-  --color-sv-vellum: #0b1620;
-  --color-sv-sheet: #0f1f2a;
-  --color-sv-ink: #e4eef0;
-  --color-sv-contour: #4fb8c4;
-  --color-sv-faint: #23404b;
-  --color-sv-mark: #f2da4b;
-  --sv-hatch-a: 0.3;
-  color-scheme: dark;
+/* Voxels drifting off the mascot */
+@keyframes ds-drift {
+  0% {
+    transform: translate(0, 0) rotate(0);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) rotate(var(--rot));
+    opacity: 0;
+  }
 }
-.sv-night .hatch {
-  background-image: repeating-linear-gradient(-45deg, rgb(11 22 32 / 0.45) 0 1px, transparent 1px 7px);
+.ds-voxel {
+  animation: ds-drift var(--dur) ease-out infinite;
+  animation-delay: var(--delay);
 }
 
-@keyframes blink {
+@keyframes ds-blink {
   50% {
     opacity: 0;
   }
 }
-.caret {
-  animation: blink 1s steps(1) infinite;
+.ds-caret {
+  animation: ds-blink 1s steps(1) infinite;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
